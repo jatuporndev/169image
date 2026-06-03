@@ -150,14 +150,56 @@ async function processFile(file) {
   renderItem(entry, canvasW, canvasH);
 }
 
+// iOS Safari can't save <a download> to Photos — it only goes to Files.
+// Detect whether the Web Share API can share files (the path to "Save Image").
+function canShareFiles(file) {
+  return (
+    typeof navigator.canShare === "function" &&
+    navigator.canShare({ files: [file] })
+  );
+}
+
 function renderItem(entry, w, h) {
   const div = document.createElement("div");
   div.className = "item";
-  div.innerHTML = `
-    <img src="${entry.url}" alt="${entry.name}">
-    <div class="meta">${entry.name}<br>${w} × ${h} px · ${(entry.blob.size / 1024).toFixed(0)} KB</div>
-    <a class="dl" href="${entry.url}" download="${entry.name}">Download</a>
-  `;
+
+  const img = document.createElement("img");
+  img.src = entry.url;
+  img.alt = entry.name;
+
+  const meta = document.createElement("div");
+  meta.className = "meta";
+  meta.innerHTML = `${entry.name}<br>${w} × ${h} px · ${(entry.blob.size / 1024).toFixed(0)} KB`;
+
+  const file = new File([entry.blob], entry.name, { type: "image/jpeg" });
+
+  const btnRow = document.createElement("div");
+  btnRow.className = "btn-row";
+
+  // On devices that support file sharing (iOS/Android), offer Save/Share.
+  if (canShareFiles(file)) {
+    const shareBtn = document.createElement("button");
+    shareBtn.className = "dl share";
+    shareBtn.textContent = "Save / Share";
+    shareBtn.addEventListener("click", async () => {
+      try {
+        await navigator.share({ files: [file], title: entry.name });
+      } catch (err) {
+        if (err && err.name !== "AbortError") console.error(err);
+      }
+    });
+    btnRow.appendChild(shareBtn);
+  }
+
+  // Always provide a plain download (desktop / fallback).
+  const dl = document.createElement("a");
+  dl.className = "dl";
+  dl.href = entry.url;
+  dl.download = entry.name;
+  dl.textContent = "Download";
+  btnRow.appendChild(dl);
+
+  div.append(img, meta, btnRow);
   grid.appendChild(div);
 }
 

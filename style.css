@@ -93,14 +93,21 @@ h1 { font-size: 28px; margin-bottom: 6px; }
   background: #000;
 }
 .item .meta { font-size: 12px; color: var(--muted); margin: 8px 0; word-break: break-all; }
-.item a.dl {
+.btn-row { display: flex; gap: 8px; }
+.item .dl {
+  flex: 1;
   display: block;
   text-align: center;
   background: #232733;
   color: var(--text);
   text-decoration: none;
-  padding: 8px;
+  padding: 9px 8px;
   border-radius: 8px;
   font-size: 13px;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
 }
-.item a.dl:hover { background: #2c3240; }
+.item .dl:hover { background: #2c3240; }
+.item .dl.share { background: var(--accent); color: #fff; }
+.item .dl.share:hover { background: #3f7af0; }
