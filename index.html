@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Image Aspect Ratio → JPEG</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app">
+    <h1>Image Aspect Ratio Converter</h1>
+    <p class="sub">Pad images to <b>9:16</b> or <b>16:9</b> without cropping · no quality loss · export as JPEG</p>
+
+    <label class="drop" id="drop">
+      <input type="file" id="file" accept="image/*" multiple hidden>
+      <span id="dropText">Click or drag images here (multiple allowed)</span>
+    </label>
+
+    <div class="controls">
+      <div class="group">
+        <span class="label">Aspect Ratio</span>
+        <div class="seg" id="ratio">
+          <button data-v="9:16" class="active">9:16 (Portrait)</button>
+          <button data-v="16:9">16:9 (Landscape)</button>
+        </div>
+      </div>
+
+      <div class="group">
+        <span class="label">Background</span>
+        <div class="seg" id="bg">
+          <button data-v="#000000" class="active">Black</button>
+          <button data-v="#ffffff">White</button>
+        </div>
+      </div>
+
+      <div class="group">
+        <span class="label">JPEG Quality</span>
+        <div class="quality">
+          <input type="range" id="quality" min="0.7" max="1" step="0.01" value="1">
+          <span id="qVal">100%</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button id="downloadAll" disabled>Download All</button>
+    </div>
+
+    <div class="grid" id="grid"></div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
